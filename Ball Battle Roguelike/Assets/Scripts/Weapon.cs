@@ -9,10 +9,16 @@ public abstract class Weapon : MonoBehaviour
     protected Rigidbody2D rigidbody2d;
     protected Collider2D collider2d;
 
+    [SerializeField] protected LayerMask collisionMask;
+
+    [Space]
+
     [SerializeField] protected double damage;
     [SerializeField] protected DamageType damageType;
     [SerializeField] protected double speed;
     [SerializeField] protected double cooldown;
+
+    protected bool reverseRotation;
 
     protected virtual void Awake()
     {
@@ -23,12 +29,19 @@ public abstract class Weapon : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
-        transform.Rotate(Vector3.forward, 10 * Time.fixedDeltaTime);
+        int rotationDirection = reverseRotation ? -1 : 1;
+        transform.Rotate(Vector3.forward, 10 * Time.fixedDeltaTime * rotationDirection);
         transform.position = owner.transform.position + (transform.up * transform.localScale.y / 2);
     }
 
-    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.gameObject == owner) return;
 
+        IDamageable[] damageables = collision.gameObject.GetComponents<IDamageable>();
+        foreach (IDamageable damageable in damageables)
+            damageable.TakeDamage(damage, damageType);
+
+        reverseRotation = !reverseRotation;
     }
 }

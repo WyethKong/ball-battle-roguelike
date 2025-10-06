@@ -6,7 +6,7 @@ namespace Damage
 {
     public interface IDamageable
     {
-        public void TakeDamage(int damage, DamageType damageType);
+        public void TakeDamage(double damage, DamageType damageType);
     }
 
     public enum DamageType
