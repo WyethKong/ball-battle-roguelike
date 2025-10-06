@@ -1,9 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
+using static UnityEngine.UI.Image;
 
 public class CharacterController : MonoBehaviour, IDamageable
 {
+    //Rigidbody2D rigidbody2d;
+    //CircleCollider2D collider2d;
+    LayerMask collisionMask;
+
     [SerializeField] int health = 10;   // The amount of damage the character can take before dying
     [SerializeField] int power = 0;     // The amount of damage added to physical attacks 
     [SerializeField] int magic = 0;     // The amount of damage added to magic attacks
@@ -14,5 +21,44 @@ public class CharacterController : MonoBehaviour, IDamageable
     public void TakeDamage(int damage)
     {
         health -= Mathf.Max(0, damage);
+    }
+
+    private void Awake()
+    {
+        //rigidbody2d = GetComponent<Rigidbody2D>();
+        //collider2d = GetComponent<CircleCollider2D>();
+    }
+
+    private void Start()
+    {
+        moveDirection = Vector2.left;
+    }
+
+    private void FixedUpdate()
+    {
+        float distance = speed * Time.fixedDeltaTime;
+        while (distance > 0)
+        {
+            RaycastHit2D hit = Physics2D.CircleCast(
+                transform.position,
+                transform.localScale.x / 2,
+                moveDirection,
+                distance
+                //collisionMask
+            );
+
+            if (hit)
+            {
+                transform.Translate(moveDirection * hit.distance);
+                distance -= hit.distance;
+
+                moveDirection = Vector2.Reflect(moveDirection, hit.normal);
+            }
+            else
+            {
+                transform.Translate(moveDirection * distance);
+                distance = 0;
+            }
+        }
     }
 }
