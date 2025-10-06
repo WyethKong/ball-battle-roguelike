@@ -9,7 +9,7 @@ public abstract class Weapon : MonoBehaviour
     protected Rigidbody2D rigidbody2d;
     protected Collider2D collider2d;
 
-    [SerializeField] protected LayerMask collisionMask;
+    [SerializeField] protected LayerMask weaponMask = 1 << 6;
 
     [Space]
 
@@ -42,6 +42,7 @@ public abstract class Weapon : MonoBehaviour
         foreach (IDamageable damageable in damageables)
             damageable.TakeDamage(damage, damageType);
 
-        reverseRotation = !reverseRotation;
+        if (collision.gameObject.layer == weaponMask)
+            reverseRotation = !reverseRotation;
     }
 }

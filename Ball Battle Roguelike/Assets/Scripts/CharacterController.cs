@@ -8,7 +8,7 @@ public class CharacterController : MonoBehaviour, IDamageable
 {
     //Rigidbody2D rigidbody2d;
     //CircleCollider2D collider2d;
-    LayerMask collisionMask;
+    [SerializeField] LayerMask collisionMask;
 
     [SerializeField] double health = 10;   // The amount of damage the character can take before dying
     [SerializeField] double speed = 0;     // The speed the character moves at
@@ -35,8 +35,8 @@ public class CharacterController : MonoBehaviour, IDamageable
                 transform.position,
                 transform.localScale.x / 2,
                 moveDirection,
-                distance
-                //collisionMask
+                distance,
+                collisionMask
             );
 
             if (hit)
