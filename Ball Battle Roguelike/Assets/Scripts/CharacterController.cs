@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
-using static UnityEngine.UI.Image;
+using Damage;
 
 public class CharacterController : MonoBehaviour, IDamageable
 {
@@ -12,16 +11,9 @@ public class CharacterController : MonoBehaviour, IDamageable
     LayerMask collisionMask;
 
     [SerializeField] int health = 10;   // The amount of damage the character can take before dying
-    [SerializeField] int power = 0;     // The amount of damage added to physical attacks 
-    [SerializeField] int magic = 0;     // The amount of damage added to magic attacks
     [SerializeField] int speed = 0;     // The speed the character moves at
 
     Vector2 moveDirection;
-
-    public void TakeDamage(int damage)
-    {
-        health -= Mathf.Max(0, damage);
-    }
 
     private void Awake()
     {
@@ -60,5 +52,10 @@ public class CharacterController : MonoBehaviour, IDamageable
                 distance = 0;
             }
         }
+    }
+
+    public void TakeDamage(int damage, DamageType damageType)
+    {
+        health -= Mathf.Max(0, damage);
     }
 }
